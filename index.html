@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>מלאי הבית</title>
+<style>
+  :root {
+    --bg: #f5f3ee;
+    --surface: #ffffff;
+    --surface-2: #f0ede6;
+    --text: #1f2421;
+    --muted: #6b716d;
+    --border: #e2ddd3;
+    --accent: #2f6f5e;
+    --accent-soft: #e1efe9;
+    --ok: #2f7d4f;
+    --ok-soft: #e3f3e8;
+    --warn: #b86a12;
+    --warn-soft: #fbeedc;
+    --bad: #b8332f;
+    --bad-soft: #f9e2e0;
+    --info: #2d5f9a;
+    --info-soft: #e2ecf8;
+    --shadow: 0 1px 2px rgba(0,0,0,.05), 0 4px 12px rgba(0,0,0,.04);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #151816; --surface: #1e2220; --surface-2: #262b28; --text: #e9ece9;
+      --muted: #9aa29d; --border: #333a36; --accent: #6cc3a6; --accent-soft: #1f3a32;
+      --ok: #6fcf94; --ok-soft: #1d3527; --warn: #f0a85a; --warn-soft: #3a2a17;
+      --bad: #f08580; --bad-soft: #3d1f1d; --info: #8ab6ec; --info-soft: #1c2b3d;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #151816; --surface: #1e2220; --surface-2: #262b28; --text: #e9ece9;
+    --muted: #9aa29d; --border: #333a36; --accent: #6cc3a6; --accent-soft: #1f3a32;
+    --ok: #6fcf94; --ok-soft: #1d3527; --warn: #f0a85a; --warn-soft: #3a2a17;
+    --bad: #f08580; --bad-soft: #3d1f1d; --info: #8ab6ec; --info-soft: #1c2b3d;
+    --shadow: none;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: "Segoe UI", "Rubik", "Arial Hebrew", Arial, sans-serif;
+    font-size: 15px; line-height: 1.5;
+  }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 20px 16px 48px; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+  h1 { margin: 0; font-size: 26px; letter-spacing: -.3px; }
+  .sub { color: var(--muted); margin: 2px 0 0; }
+  h2 { font-size: 17px; margin: 0 0 12px; display: flex; align-items: center; gap: 8px; }
+  h2 .count { font-size: 12px; font-weight: 600; background: var(--surface-2); color: var(--muted); padding: 1px 8px; border-radius: 99px; }
+
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; box-shadow: var(--shadow); }
+  .kpi .label { color: var(--muted); font-size: 13px; }
+  .kpi .value { font-size: 28px; font-weight: 700; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .kpi.bad .value { color: var(--bad); } .kpi.warn .value { color: var(--warn); }
+  .kpi.info .value { color: var(--info); } .kpi.accent .value { color: var(--accent); }
+
+  .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  @media (max-width: 900px) { .grid, .grid-2 { grid-template-columns: 1fr; } }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; box-shadow: var(--shadow); min-width: 0; }
+
+  .controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  input[type=search], select {
+    font: inherit; color: var(--text); background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 7px 10px; min-width: 0;
+  }
+  input[type=search] { flex: 1 1 180px; }
+  button { font: inherit; cursor: pointer; }
+  .btn { background: var(--accent); color: #fff; border: 0; border-radius: 9px; padding: 6px 12px; font-weight: 600; font-size: 13px; }
+  :root[data-theme="dark"] .btn { color: #0f1f1a; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn { color: #0f1f1a; } }
+  .btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+  .btn:disabled { opacity: .45; cursor: default; }
+  .icon-btn { width: 28px; height: 28px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 16px; line-height: 1; }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: right; font-weight: 600; color: var(--muted); font-size: 12px; padding: 8px 6px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 8px 6px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: 0; }
+  .item-name { font-weight: 600; }
+  .item-meta { color: var(--muted); font-size: 12px; }
+  .qty { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .qty span { min-width: 54px; text-align: center; font-variant-numeric: tabular-nums; }
+
+  .badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 99px; white-space: nowrap; }
+  .b-ok { background: var(--ok-soft); color: var(--ok); }
+  .b-warn { background: var(--warn-soft); color: var(--warn); }
+  .b-bad { background: var(--bad-soft); color: var(--bad); }
+  .b-info { background: var(--info-soft); color: var(--info); }
+  .b-muted { background: var(--surface-2); color: var(--muted); }
+
+  .store-group { border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; margin-bottom: 10px; }
+  .store-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .store-head strong { font-size: 15px; }
+  .line { display: flex; justify-content: space-between; gap: 8px; font-size: 14px; padding: 3px 0; }
+  .line .muted { color: var(--muted); }
+  .store-total { display: flex; justify-content: space-between; border-top: 1px dashed var(--border); margin-top: 6px; padding-top: 6px; font-weight: 600; font-size: 14px; }
+  .empty { color: var(--muted); text-align: center; padding: 20px 8px; }
+
+  .exp-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--border); }
+  .exp-row:last-child { border-bottom: 0; }
+
+  .orders { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .order { border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+  .order-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .order-lines { color: var(--muted); font-size: 13px; margin: 6px 0 10px; }
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 4px; }
+  .step { height: 6px; border-radius: 99px; background: var(--surface-2); }
+  .step.on { background: var(--accent); }
+  .step-labels { display: grid; grid-template-columns: repeat(4, 1fr); font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+  .order-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 13px; }
+
+  .bars { display: flex; flex-direction: column; gap: 9px; }
+  .bar-row { display: grid; grid-template-columns: 96px 1fr 32px; align-items: center; gap: 8px; font-size: 13px; }
+  .bar-track { height: 12px; background: var(--surface-2); border-radius: 99px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width .3s; }
+  .bar-num { text-align: left; font-variant-numeric: tabular-nums; color: var(--muted); }
+  .stack { display: flex; height: 22px; border-radius: 99px; overflow: hidden; background: var(--surface-2); margin: 6px 0 12px; }
+  .stack div { transition: width .3s; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-inline-end: 5px; vertical-align: -1px; }
+
+  .toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text); color: var(--bg); padding: 9px 16px; border-radius: 10px; font-size: 14px; transition: transform .25s; z-index: 10; max-width: calc(100% - 32px); }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .theme-toggle { background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 6px 12px; }
+  @media (max-width: 560px) { .hide-sm { display: none; } h1 { font-size: 22px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>🏠 מלאי הבית</h1>
+      <p class="sub" id="today"></p>
+    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="החלפת מצב תצוגה">🌓 מצב תצוגה</button>
+  </header>
+
+  <section class="kpis" id="kpis" aria-label="מדדים"></section>
+
+  <div class="grid">
+    <section class="card" aria-labelledby="invTitle">
+      <h2 id="invTitle">מלאי <span class="count" id="invCount"></span></h2>
+      <div class="controls">
+        <input type="search" id="search" placeholder="חיפוש מוצר…" aria-label="חיפוש מוצר">
+        <select id="catFilter" aria-label="סינון לפי קטגוריה"></select>
+        <select id="statusFilter" aria-label="סינון לפי סטטוס">
+          <option value="">כל הסטטוסים</option>
+          <option value="out">אזל</option>
+          <option value="low">נמוך</option>
+          <option value="ok">תקין</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>מוצר</th>
+              <th>כמות</th>
+              <th>סטטוס</th>
+              <th class="hide-sm">צפי סיום</th>
+              <th class="hide-sm">תוקף</th>
+            </tr>
+          </thead>
+          <tbody id="invBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="shopTitle">
+      <h2 id="shopTitle">🛒 רשימת קניות <span class="count" id="shopCount"></span></h2>
+      <div id="shopList"></div>
+    </section>
+  </div>
+
+  <div class="grid-2">
+    <section class="card" aria-labelledby="ordTitle">
+      <h2 id="ordTitle">🚚 מעקב משלוחים <span class="count" id="ordCount"></span></h2>
+      <div class="orders" id="orders"></div>
+    </section>
+    <section class="card" aria-labelledby="expTitle">
+      <h2 id="expTitle">⏳ פג תוקף בקרוב</h2>
+      <div id="expList"></div>
+    </section>
+  </div>
+
+  <div class="grid-2">
+    <section class="card" aria-labelledby="catTitle">
+      <h2 id="catTitle">פריטים לפי קטגוריה</h2>
+      <div class="bars" id="catChart"></div>
+    </section>
+    <section class="card" aria-labelledby="stTitle">
+      <h2 id="stTitle">מצב המלאי</h2>
+      <div class="stack" id="statusStack"></div>
+      <div class="legend" id="statusLegend"></div>
+    </section>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* =========================================================
+   MOCK DATA – נתוני דמה
+   תאריכים נשמרים כהפרש ימים מהיום, כדי שהדמו תמיד ייראה עדכני.
+   ========================================================= */
+const MOCK_DATA = {
+  items: [
+    { id: 1,  name: "חלב 3%",            category: "מקרר",          location: "מטבח",   qty: 1, unit: "ליטר",  minQty: 2, daysPerUnit: 2,  store: "סופר",    price: 6.9,  expiresInDays: 4 },
+    { id: 2,  name: "ביצים L",            category: "מקרר",          location: "מטבח",   qty: 6, unit: "יח'",   minQty: 12, daysPerUnit: 0.5, store: "סופר",  price: 1.2,  expiresInDays: 12 },
+    { id: 3,  name: "גבינה לבנה 5%",      category: "מקרר",          location: "מטבח",   qty: 0, unit: "גביע",  minQty: 2, daysPerUnit: 3,  store: "סופר",    price: 5.5,  expiresInDays: null },
+    { id: 4,  name: "יוגורט",             category: "מקרר",          location: "מטבח",   qty: 4, unit: "גביע",  minQty: 4, daysPerUnit: 1,  store: "סופר",    price: 3.9,  expiresInDays: 2 },
+    { id: 5,  name: "חמאה",               category: "מקרר",          location: "מטבח",   qty: 1, unit: "אריזה", minQty: 1, daysPerUnit: 14, store: "סופר",    price: 9.9,  expiresInDays: 30 },
+    { id: 6,  name: "עגבניות",            category: "מקרר",          location: "מטבח",   qty: 0.5, unit: "ק\"ג", minQty: 1, daysPerUnit: 3, store: "שוק",     price: 7.9,  expiresInDays: 3 },
+    { id: 7,  name: "מלפפונים",           category: "מקרר",          location: "מטבח",   qty: 1.5, unit: "ק\"ג", minQty: 1, daysPerUnit: 3, store: "שוק",     price: 5.9,  expiresInDays: 5 },
+    { id: 8,  name: "חומוס מוכן",         category: "מקרר",          location: "מטבח",   qty: 1, unit: "גביע",  minQty: 1, daysPerUnit: 3,  store: "סופר",    price: 8.9,  expiresInDays: -1 },
+    { id: 9,  name: "פסטה",               category: "מזווה",         location: "מטבח",   qty: 5, unit: "אריזה", minQty: 3, daysPerUnit: 4,  store: "סופר",    price: 5.9,  expiresInDays: 240 },
+    { id: 10, name: "אורז בסמטי",          category: "מזווה",         location: "מטבח",   qty: 1, unit: "ק\"ג",  minQty: 2, daysPerUnit: 7,  store: "סופר",    price: 12.9, expiresInDays: 300 },
+    { id: 11, name: "שמן זית",            category: "מזווה",         location: "מטבח",   qty: 1, unit: "בקבוק", minQty: 1, daysPerUnit: 30, store: "סופר",    price: 39.9, expiresInDays: 400 },
+    { id: 12, name: "רסק עגבניות",         category: "מזווה",         location: "מחסן",   qty: 6, unit: "פחית",  minQty: 3, daysPerUnit: 7,  store: "סופר",    price: 3.5,  expiresInDays: 500 },
+    { id: 13, name: "טונה",               category: "מזווה",         location: "מחסן",   qty: 2, unit: "פחית",  minQty: 4, daysPerUnit: 4,  store: "סופר",    price: 6.5,  expiresInDays: 600 },
+    { id: 14, name: "קפה נמס",            category: "מזווה",         location: "מטבח",   qty: 1, unit: "צנצנת", minQty: 1, daysPerUnit: 20, store: "סופר",    price: 29.9, expiresInDays: 180 },
+    { id: 15, name: "קורנפלקס",           category: "מזווה",         location: "מטבח",   qty: 0, unit: "אריזה", minQty: 2, daysPerUnit: 5,  store: "סופר",    price: 17.9, expiresInDays: null },
+    { id: 16, name: "לחם מלא",            category: "מזווה",         location: "מטבח",   qty: 1, unit: "כיכר",  minQty: 1, daysPerUnit: 2,  store: "מאפייה",  price: 14,   expiresInDays: 1 },
+    { id: 17, name: "חזה עוף",            category: "מקפיא",         location: "מטבח",   qty: 2, unit: "ק\"ג",  minQty: 1, daysPerUnit: 4,  store: "סופר",    price: 39.9, expiresInDays: 60 },
+    { id: 18, name: "אפונה קפואה",         category: "מקפיא",         location: "מטבח",   qty: 3, unit: "שקית",  minQty: 2, daysPerUnit: 10, store: "סופר",    price: 9.9,  expiresInDays: 200 },
+    { id: 19, name: "שניצל תירס",          category: "מקפיא",         location: "מטבח",   qty: 0, unit: "אריזה", minQty: 1, daysPerUnit: 6,  store: "סופר",    price: 24.9, expiresInDays: null },
+    { id: 20, name: "נוזל כלים",           category: "ניקיון",        location: "מטבח",   qty: 1, unit: "בקבוק", minQty: 1, daysPerUnit: 20, store: "סופר",    price: 11.9, expiresInDays: null },
+    { id: 21, name: "אבקת כביסה",          category: "ניקיון",        location: "מרפסת שירות", qty: 0, unit: "אריזה", minQty: 1, daysPerUnit: 30, store: "אונליין", price: 49.9, expiresInDays: null },
+    { id: 22, name: "טבליות למדיח",        category: "ניקיון",        location: "מטבח",   qty: 12, unit: "יח'",  minQty: 10, daysPerUnit: 1, store: "אונליין", price: 1.1,  expiresInDays: null },
+    { id: 23, name: "שקיות זבל",           category: "ניקיון",        location: "מחסן",   qty: 1, unit: "גליל",  minQty: 2, daysPerUnit: 14, store: "סופר",    price: 12.9, expiresInDays: null },
+    { id: 24, name: "נייר טואלט",          category: "היגיינה",       location: "מחסן",   qty: 8, unit: "גליל",  minQty: 12, daysPerUnit: 2, store: "סופר",    price: 2.5,  expiresInDays: null },
+    { id: 25, name: "משחת שיניים",         category: "היגיינה",       location: "אמבטיה", qty: 2, unit: "שפופרת", minQty: 2, daysPerUnit: 25, store: "פארם", price: 14.9, expiresInDays: 500 },
+    { id: 26, name: "שמפו",               category: "היגיינה",       location: "אמבטיה", qty: 1, unit: "בקבוק", minQty: 1, daysPerUnit: 30, store: "פארם",    price: 24.9, expiresInDays: null },
+    { id: 27, name: "סבון ידיים",          category: "היגיינה",       location: "אמבטיה", qty: 3, unit: "בקבוק", minQty: 2, daysPerUnit: 20, store: "פארם",    price: 9.9,  expiresInDays: null },
+    { id: 28, name: "דאודורנט",            category: "היגיינה",       location: "אמבטיה", qty: 0, unit: "יח'",   minQty: 1, daysPerUnit: 30, store: "פארם",    price: 19.9, expiresInDays: null },
+    { id: 29, name: "חטיפים לבית הספר",     category: "ילדים",         location: "מטבח",   qty: 4, unit: "יח'",   minQty: 10, daysPerUnit: 0.5, store: "סופר", price: 2.9, expiresInDays: 90 },
+    { id: 30, name: "מגבונים לחים",         category: "ילדים",         location: "אמבטיה", qty: 1, unit: "חבילה", minQty: 2, daysPerUnit: 7,  store: "פארם",    price: 9.9,  expiresInDays: null },
+    { id: 31, name: "פלסטרים",             category: "ילדים",         location: "אמבטיה", qty: 1, unit: "קופסה", minQty: 1, daysPerUnit: 60, store: "פארם",    price: 14.9, expiresInDays: 700 },
+    { id: 32, name: "אוכל לחתול",           category: "חיות מחמד",     location: "מחסן",   qty: 2, unit: "ק\"ג",  minQty: 2, daysPerUnit: 6,  store: "אונליין", price: 22,   expiresInDays: 150 },
+  ],
+  orders: [
+    { id: "SH-2041", store: "אונליין", orderedDaysAgo: 2, etaInDays: 1, status: "בדרך",  lines: [{ itemId: 21, qty: 2 }, { itemId: 32, qty: 4 }] },
+    { id: "SH-2038", store: "פארם",    orderedDaysAgo: 1, etaInDays: 3, status: "נשלח",  lines: [{ itemId: 28, qty: 2 }, { itemId: 26, qty: 1 }] },
+    { id: "SH-2030", store: "סופר",    orderedDaysAgo: 5, etaInDays: 0, status: "נמסר",  lines: [{ itemId: 9, qty: 4 }, { itemId: 12, qty: 4 }] },
+  ],
+};
+
+/* =========================================================
+   STATE & HELPERS
+   ========================================================= */
+const ORDER_STEPS = ["הוזמן", "נשלח", "בדרך", "נמסר"];
+const state = {
+  items: structuredClone(MOCK_DATA.items),
+  orders: structuredClone(MOCK_DATA.orders),
+  nextOrderNo: 2042,
+};
+const $ = (id) => document.getElementById(id);
+const fmtMoney = (n) => "₪" + n.toLocaleString("he-IL", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+const fmtQty = (n) => Number.isInteger(n) ? String(n) : n.toFixed(1);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const itemById = (id) => state.items.find((i) => i.id === id);
+
+function status(item) {
+  if (item.qty <= 0) return "out";
+  if (item.qty < item.minQty) return "low";
+  return "ok";
+}
+const STATUS_INFO = {
+  out: { label: "אזל",  cls: "b-bad" },
+  low: { label: "נמוך", cls: "b-warn" },
+  ok:  { label: "תקין", cls: "b-ok" },
+};
+function stepFor(item) {
+  // צעד +/- : חצי יחידה לפריטים שנמדדים בק"ג, אחרת יחידה שלמה
+  return item.unit === 'ק"ג' ? 0.5 : 1;
+}
+function daysLeft(item) { return item.qty * item.daysPerUnit; }
+
+function openOrderQty(itemId) {
+  return state.orders
+    .filter((o) => o.status !== "נמסר")
+    .flatMap((o) => o.lines)
+    .filter((l) => l.itemId === itemId)
+    .reduce((sum, l) => sum + l.qty, 0);
+}
+
+function shoppingList() {
+  return state.items
+    .filter((i) => status(i) !== "ok" && openOrderQty(i.id) === 0)
+    .map((i) => {
+      const step = stepFor(i);
+      const need = Math.max(step, Math.ceil((i.minQty * 2 - i.qty) / step) * step);
+      return { item: i, qty: need, cost: need * i.price };
+    });
+}
+
+function expiryBadge(days) {
+  if (days === null || days === undefined) return '<span class="badge b-muted">—</span>';
+  if (days <= 0) return '<span class="badge b-bad">פג תוקף</span>';
+  if (days <= 7) return `<span class="badge b-warn">${days === 1 ? "מחר" : days + " ימים"}</span>`;
+  return `<span class="item-meta">${days > 60 ? "תקין" : days + " ימים"}</span>`;
+}
+
+let toastTimer;
+function toast(msg) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+function renderKpis() {
+  const lowCount = state.items.filter((i) => status(i) !== "ok").length;
+  const expCount = state.items.filter((i) => i.expiresInDays !== null && i.expiresInDays <= 7).length;
+  const openOrders = state.orders.filter((o) => o.status !== "נמסר").length;
+  const shopCost = shoppingList().reduce((s, l) => s + l.cost, 0);
+  const kpis = [
+    { label: "פריטים במעקב", value: state.items.length, cls: "" },
+    { label: "חסר / נמוך", value: lowCount, cls: "bad" },
+    { label: "פג תוקף תוך שבוע", value: expCount, cls: "warn" },
+    { label: "משלוחים בדרך", value: openOrders, cls: "info" },
+    { label: "עלות קניות משוערת", value: fmtMoney(shopCost), cls: "accent" },
+  ];
+  $("kpis").innerHTML = kpis.map((k) =>
+    `<div class="kpi ${k.cls}"><div class="label">${k.label}</div><div class="value">${k.value}</div></div>`
+  ).join("");
+}
+
+function renderFilters() {
+  const cats = [...new Set(state.items.map((i) => i.category))];
+  $("catFilter").innerHTML = '<option value="">כל הקטגוריות</option>' +
+    cats.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+}
+
+function renderInventory() {
+  const q = $("search").value.trim();
+  const cat = $("catFilter").value;
+  const st = $("statusFilter").value;
+  const order = { out: 0, low: 1, ok: 2 };
+  const rows = state.items
+    .filter((i) => (!q || i.name.includes(q)) && (!cat || i.category === cat) && (!st || status(i) === st))
+    .sort((a, b) => order[status(a)] - order[status(b)] || a.name.localeCompare(b.name, "he"));
+
+  $("invCount").textContent = rows.length;
+  if (!rows.length) {
+    $("invBody").innerHTML = '<tr><td colspan="5" class="empty">לא נמצאו מוצרים</td></tr>';
+    return;
+  }
+  $("invBody").innerHTML = rows.map((i) => {
+    const s = STATUS_INFO[status(i)];
+    const d = daysLeft(i);
+    const incoming = openOrderQty(i.id);
+    return `<tr>
+      <td>
+        <div class="item-name">${esc(i.name)}</div>
+        <div class="item-meta">${esc(i.category)} · ${esc(i.location)}${incoming ? ` · <span style="color:var(--info)">+${fmtQty(incoming)} בדרך</span>` : ""}</div>
+      </td>
+      <td>
+        <div class="qty">
+          <button class="icon-btn" data-act="dec" data-id="${i.id}" aria-label="הפחת ${esc(i.name)}">−</button>
+          <span>${fmtQty(i.qty)} ${esc(i.unit)}</span>
+          <button class="icon-btn" data-act="inc" data-id="${i.id}" aria-label="הוסף ${esc(i.name)}">+</button>
+        </div>
+      </td>
+      <td><span class="badge ${s.cls}">${s.label}</span></td>
+      <td class="hide-sm">${i.qty <= 0 ? '<span class="item-meta">—</span>' : `<span class="item-meta">~${Math.round(d)} ימים</span>`}</td>
+      <td class="hide-sm">${expiryBadge(i.expiresInDays)}</td>
+    </tr>`;
+  }).join("");
+}
+
+function renderShopping() {
+  const list = shoppingList();
+  $("shopCount").textContent = list.length;
+  if (!list.length) {
+    $("shopList").innerHTML = '<div class="empty">אין מה לקנות כרגע 🎉</div>';
+    return;
+  }
+  const byStore = {};
+  list.forEach((l) => (byStore[l.item.store] ||= []).push(l));
+  $("shopList").innerHTML = Object.entries(byStore)
+    .sort((a, b) => b[1].length - a[1].length)
+    .map(([store, lines]) => {
+      const total = lines.reduce((s, l) => s + l.cost, 0);
+      return `<div class="store-group">
+        <div class="store-head">
+          <strong>${esc(store)}</strong>
+          <button class="btn" data-act="order" data-store="${esc(store)}">הזמן</button>
+        </div>
+        ${lines.map((l) => `<div class="line">
+          <span>${esc(l.item.name)} <span class="muted">× ${fmtQty(l.qty)} ${esc(l.item.unit)}</span></span>
+          <span class="muted">${fmtMoney(l.cost)}</span>
+        </div>`).join("")}
+        <div class="store-total"><span>סה"כ</span><span>${fmtMoney(total)}</span></div>
+      </div>`;
+    }).join("");
+}
+
+function renderExpiring() {
+  const list = state.items
+    .filter((i) => i.expiresInDays !== null && i.expiresInDays <= 14 && i.qty > 0)
+    .sort((a, b) => a.expiresInDays - b.expiresInDays);
+  $("expList").innerHTML = list.length
+    ? list.map((i) => `<div class="exp-row">
+        <div><div class="item-name">${esc(i.name)}</div><div class="item-meta">${fmtQty(i.qty)} ${esc(i.unit)} · ${esc(i.location)}</div></div>
+        ${i.expiresInDays <= 0 ? '<span class="badge b-bad">פג תוקף</span>'
+          : i.expiresInDays <= 7 ? `<span class="badge b-warn">${i.expiresInDays === 1 ? "מחר" : "עוד " + i.expiresInDays + " ימים"}</span>`
+          : `<span class="badge b-muted">עוד ${i.expiresInDays} ימים</span>`}
+      </div>`).join("")
+    : '<div class="empty">אין מוצרים שפג תוקפם בקרוב</div>';
+}
+
+function renderOrders() {
+  const sorted = [...state.orders].sort((a, b) =>
+    (a.status === "נמסר") - (b.status === "נמסר") || a.etaInDays - b.etaInDays);
+  $("ordCount").textContent = state.orders.filter((o) => o.status !== "נמסר").length + " פתוחים";
+  $("orders").innerHTML = sorted.map((o) => {
+    const stepIdx = ORDER_STEPS.indexOf(o.status);
+    const done = o.status === "נמסר";
+    const eta = done ? "התקבל" : o.etaInDays <= 0 ? "מגיע היום" : o.etaInDays === 1 ? "מגיע מחר" : `מגיע בעוד ${o.etaInDays} ימים`;
+    const lines = o.lines.map((l) => {
+      const it = itemById(l.itemId);
+      return it ? `${esc(it.name)} × ${fmtQty(l.qty)}` : "";
+    }).join(" · ");
+    return `<div class="order" style="${done ? "opacity:.65" : ""}">
+      <div class="order-head">
+        <strong>${esc(o.store)}</strong>
+        <span class="badge ${done ? "b-ok" : "b-info"}">${esc(o.status)}</span>
+      </div>
+      <div class="item-meta">#${esc(o.id)} · הוזמן ${o.orderedDaysAgo === 0 ? "היום" : "לפני " + o.orderedDaysAgo + " ימים"}</div>
+      <div class="order-lines">${lines}</div>
+      <div class="steps">${ORDER_STEPS.map((_, i) => `<div class="step ${i <= stepIdx ? "on" : ""}"></div>`).join("")}</div>
+      <div class="step-labels">${ORDER_STEPS.map((s) => `<span>${s}</span>`).join("")}</div>
+      <div class="order-foot">
+        <span>${eta}</span>
+        ${done ? "" : `<span style="display:flex;gap:6px">
+          ${stepIdx < 2 ? `<button class="btn ghost" data-act="advance" data-id="${esc(o.id)}">קדם סטטוס</button>` : ""}
+          <button class="btn" data-act="receive" data-id="${esc(o.id)}">התקבל</button>
+        </span>`}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function renderCharts() {
+  const counts = {};
+  state.items.forEach((i) => (counts[i.category] = (counts[i.category] || 0) + 1));
+  const max = Math.max(...Object.values(counts));
+  $("catChart").innerHTML = Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([c, n]) => `<div class="bar-row">
+      <span>${esc(c)}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${(n / max) * 100}%"></div></div>
+      <span class="bar-num">${n}</span>
+    </div>`).join("");
+
+  const total = state.items.length;
+  const parts = [
+    { key: "ok",  label: "תקין", color: "var(--ok)" },
+    { key: "low", label: "נמוך", color: "var(--warn)" },
+    { key: "out", label: "אזל",  color: "var(--bad)" },
+  ].map((p) => ({ ...p, n: state.items.filter((i) => status(i) === p.key).length }));
+  $("statusStack").innerHTML = parts.map((p) =>
+    `<div style="width:${(p.n / total) * 100}%;background:${p.color}" title="${p.label}: ${p.n}"></div>`).join("");
+  $("statusLegend").innerHTML = parts.map((p) =>
+    `<span><span class="dot" style="background:${p.color}"></span>${p.label} · ${p.n} (${Math.round((p.n / total) * 100)}%)</span>`).join("");
+}
+
+function renderAll() {
+  renderKpis();
+  renderInventory();
+  renderShopping();
+  renderExpiring();
+  renderOrders();
+  renderCharts();
+}
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+function changeQty(id, dir) {
+  const it = itemById(id);
+  if (!it) return;
+  it.qty = Math.max(0, +(it.qty + dir * stepFor(it)).toFixed(2));
+  renderAll();
+}
+
+function placeOrder(store) {
+  const lines = shoppingList().filter((l) => l.item.store === store);
+  if (!lines.length) return;
+  state.orders.push({
+    id: "SH-" + state.nextOrderNo++,
+    store,
+    orderedDaysAgo: 0,
+    etaInDays: store === "אונליין" ? 3 : 1,
+    status: "הוזמן",
+    lines: lines.map((l) => ({ itemId: l.item.id, qty: l.qty })),
+  });
+  toast(`נוצרה הזמנה ל${store} (${lines.length} פריטים)`);
+  renderAll();
+}
+
+function advanceOrder(id) {
+  const o = state.orders.find((x) => x.id === id);
+  if (!o) return;
+  const idx = ORDER_STEPS.indexOf(o.status);
+  if (idx < 2) o.status = ORDER_STEPS[idx + 1];
+  renderAll();
+}
+
+function receiveOrder(id) {
+  const o = state.orders.find((x) => x.id === id);
+  if (!o || o.status === "נמסר") return;
+  o.status = "נמסר";
+  o.etaInDays = 0;
+  o.lines.forEach((l) => {
+    const it = itemById(l.itemId);
+    if (it) it.qty = +(it.qty + l.qty).toFixed(2);
+  });
+  toast(`ההזמנה #${o.id} התקבלה והמלאי עודכן`);
+  renderAll();
+}
+
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-act]");
+  if (!b) return;
+  const act = b.dataset.act;
+  if (act === "inc") changeQty(+b.dataset.id, 1);
+  else if (act === "dec") changeQty(+b.dataset.id, -1);
+  else if (act === "order") placeOrder(b.dataset.store);
+  else if (act === "advance") advanceOrder(b.dataset.id);
+  else if (act === "receive") receiveOrder(b.dataset.id);
+});
+["search", "catFilter", "statusFilter"].forEach((id) => $(id).addEventListener("input", renderInventory));
+
+$("themeToggle").addEventListener("click", () => {
+  const root = document.documentElement;
+  const current = root.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  root.dataset.theme = current === "dark" ? "light" : "dark";
+});
+
+$("today").textContent = new Date().toLocaleDateString("he-IL", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+renderFilters();
+renderAll();
+</script>
+</body>
+</html>
