@@ -140,7 +140,10 @@
       <h1>🏠 מלאי הבית</h1>
       <p class="sub" id="today"></p>
     </div>
-    <button class="theme-toggle" id="themeToggle" aria-label="החלפת מצב תצוגה">🌓 מצב תצוגה</button>
+    <div style="display:flex;gap:8px">
+      <button class="theme-toggle" id="resetBtn" aria-label="איפוס לנתוני הדמה">↺ איפוס נתונים</button>
+      <button class="theme-toggle" id="themeToggle" aria-label="החלפת מצב תצוגה">🌓 מצב תצוגה</button>
+    </div>
   </header>
 
   <section class="kpis" id="kpis" aria-label="מדדים"></section>
@@ -256,11 +259,25 @@ const MOCK_DATA = {
    STATE & HELPERS
    ========================================================= */
 const ORDER_STEPS = ["הוזמן", "נשלח", "בדרך", "נמסר"];
-const state = {
-  items: structuredClone(MOCK_DATA.items),
-  orders: structuredClone(MOCK_DATA.orders),
-  nextOrderNo: 2042,
-};
+const STORAGE_KEY = "home-inventory-v1";
+function freshState() {
+  return {
+    items: structuredClone(MOCK_DATA.items),
+    orders: structuredClone(MOCK_DATA.orders),
+    nextOrderNo: 2042,
+  };
+}
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (saved && Array.isArray(saved.items) && Array.isArray(saved.orders)) return saved;
+  } catch (e) { /* storage unavailable or corrupt – fall back to mock data */ }
+  return freshState();
+}
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
+}
+let state = loadState();
 const $ = (id) => document.getElementById(id);
 const fmtMoney = (n) => "₪" + n.toLocaleString("he-IL", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 const fmtQty = (n) => Number.isInteger(n) ? String(n) : n.toFixed(1);
@@ -478,6 +495,7 @@ function renderCharts() {
 }
 
 function renderAll() {
+  saveState();
   renderKpis();
   renderInventory();
   renderShopping();
@@ -543,6 +561,13 @@ document.addEventListener("click", (e) => {
   else if (act === "receive") receiveOrder(b.dataset.id);
 });
 ["search", "catFilter", "statusFilter"].forEach((id) => $(id).addEventListener("input", renderInventory));
+
+$("resetBtn").addEventListener("click", () => {
+  state = freshState();
+  renderFilters();
+  renderAll();
+  toast("הנתונים אופסו לנתוני הדמה");
+});
 
 $("themeToggle").addEventListener("click", () => {
   const root = document.documentElement;
