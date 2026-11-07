@@ -102,6 +102,18 @@ git push -u origin <branch-name>
 ```
 > אל תעלה לגיטהאב לפני שבדקת גם בדסקטופ וגם בסלולרי.
 
+### מיזוג ל-main
+לאחר ה-push, **לשאול את המשתמשת: "הכל תקין — למזג ל-main?"**
+אם התשובה חיובית, להריץ:
+```bash
+git switch main
+git pull origin main
+git merge --no-ff <branch-name> -m "merge: <branch-name> into main"
+git push origin main
+git switch -c <branch-name-next>  # לא למחוק את הענף הישן
+```
+אם התשובה שלילית — לא למזג ולהמתין להנחיות נוספות.
+
 ## 8. פתרון בעיות נפוצות
 | בעיה | פתרון |
 | --- | --- |
