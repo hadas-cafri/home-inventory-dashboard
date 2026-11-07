@@ -23,6 +23,7 @@
     --info: #2d5f9a;
     --info-soft: #e2ecf8;
     --shadow: 0 1px 2px rgba(0,0,0,.05), 0 4px 12px rgba(0,0,0,.04);
+    --radius: 14px;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
@@ -54,31 +55,56 @@
   h2 .count { font-size: 12px; font-weight: 600; background: var(--surface-2); color: var(--muted); padding: 1px 8px; border-radius: 99px; }
 
   .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 20px; }
-  .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; box-shadow: var(--shadow); }
+  .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); }
   .kpi .label { color: var(--muted); font-size: 13px; }
   .kpi .value { font-size: 28px; font-weight: 700; margin-top: 2px; font-variant-numeric: tabular-nums; }
   .kpi.bad .value { color: var(--bad); } .kpi.warn .value { color: var(--warn); }
   .kpi.info .value { color: var(--info); } .kpi.accent .value { color: var(--accent); }
 
+  /* Add-product panel */
+  .add-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 16px; }
+  .add-panel-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 13px 16px; cursor: pointer; user-select: none; gap: 8px;
+  }
+  .add-panel-head h2 { margin: 0; font-size: 15px; }
+  .add-toggle { font-size: 18px; color: var(--muted); transition: transform .2s; line-height: 1; }
+  .add-toggle.open { transform: rotate(180deg); }
+  .add-body { padding: 0 16px 16px; display: none; }
+  .add-body.open { display: block; }
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+  .fg { display: flex; flex-direction: column; gap: 4px; }
+  .fg label { font-size: 12px; font-weight: 600; color: var(--muted); }
+  .fg input, .fg select {
+    font: inherit; color: var(--text); background: var(--surface-2);
+    border: 1px solid var(--border); border-radius: 9px; padding: 7px 10px;
+    width: 100%;
+  }
+  .fg input:focus, .fg select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .form-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .btn { font: inherit; cursor: pointer; background: var(--accent); color: #fff; border: 0; border-radius: 9px; padding: 7px 14px; font-weight: 600; font-size: 13px; }
+  :root[data-theme="dark"] .btn { color: #0f1f1a; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn { color: #0f1f1a; } }
+  .btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+  .btn.danger { background: var(--bad-soft); color: var(--bad); border: 1px solid #e9b4b2; }
+  .btn:disabled { opacity: .45; cursor: default; }
+  .icon-btn { width: 28px; height: 28px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 16px; line-height: 1; cursor: pointer; }
+  .icon-btn.del { color: var(--bad); border-color: #e9b4b2; background: var(--bad-soft); font-size: 13px; }
+
   .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
   @media (max-width: 900px) { .grid, .grid-2 { grid-template-columns: 1fr; } }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; box-shadow: var(--shadow); min-width: 0; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); min-width: 0; }
 
   .controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
   input[type=search], select {
     font: inherit; color: var(--text); background: var(--surface-2); border: 1px solid var(--border);
     border-radius: 10px; padding: 7px 10px; min-width: 0;
   }
-  input[type=search] { flex: 1 1 180px; }
-  button { font: inherit; cursor: pointer; }
-  .btn { background: var(--accent); color: #fff; border: 0; border-radius: 9px; padding: 6px 12px; font-weight: 600; font-size: 13px; }
-  :root[data-theme="dark"] .btn { color: #0f1f1a; }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn { color: #0f1f1a; } }
-  .btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
-  .btn:disabled { opacity: .45; cursor: default; }
-  .icon-btn { width: 28px; height: 28px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 16px; line-height: 1; }
+  input[type=search] { flex: 1 1 160px; }
+  .theme-toggle { background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 6px 12px; font: inherit; cursor: pointer; }
 
+  /* Desktop table */
   .table-wrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 14px; }
   th { text-align: right; font-weight: 600; color: var(--muted); font-size: 12px; padding: 8px 6px; border-bottom: 1px solid var(--border); white-space: nowrap; }
@@ -89,6 +115,14 @@
   .qty { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
   .qty span { min-width: 54px; text-align: center; font-variant-numeric: tabular-nums; }
 
+  /* Expiry date input in table */
+  .exp-date-input {
+    font: inherit; font-size: 12px; color: var(--text);
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 7px; padding: 3px 6px; width: 128px;
+  }
+  .exp-date-input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
   .badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 99px; white-space: nowrap; }
   .b-ok { background: var(--ok-soft); color: var(--ok); }
   .b-warn { background: var(--warn-soft); color: var(--warn); }
@@ -96,6 +130,31 @@
   .b-info { background: var(--info-soft); color: var(--info); }
   .b-muted { background: var(--surface-2); color: var(--muted); }
 
+  /* Mobile card view */
+  .mobile-cards { display: none; }
+  .m-card {
+    border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px;
+    background: var(--surface);
+  }
+  .m-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+  .m-card-name { font-weight: 700; font-size: 15px; }
+  .m-card-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .m-card-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .m-card-label { color: var(--muted); flex-shrink: 0; }
+  .m-card-actions { display: flex; gap: 8px; margin-top: 10px; }
+
+  @media (max-width: 560px) {
+    .table-wrap { display: none; }
+    .mobile-cards { display: block; }
+    .hide-sm { display: none; }
+    h1 { font-size: 22px; }
+    .form-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 380px) {
+    .form-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Shopping / orders / expiry */
   .store-group { border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; margin-bottom: 10px; }
   .store-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
   .store-head strong { font-size: 15px; }
@@ -129,8 +188,6 @@
 
   .toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text); color: var(--bg); padding: 9px 16px; border-radius: 10px; font-size: 14px; transition: transform .25s; z-index: 10; max-width: calc(100% - 32px); }
   .toast.show { transform: translateX(-50%) translateY(0); }
-  .theme-toggle { background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 6px 12px; }
-  @media (max-width: 560px) { .hide-sm { display: none; } h1 { font-size: 22px; } }
 </style>
 </head>
 <body>
@@ -145,6 +202,88 @@
 
   <section class="kpis" id="kpis" aria-label="מדדים"></section>
 
+  <!-- Add product panel -->
+  <div class="add-panel">
+    <div class="add-panel-head" id="addPanelHead" role="button" aria-expanded="false" aria-controls="addBody">
+      <h2>➕ הוספת מוצר חדש</h2>
+      <span class="add-toggle" id="addToggle">▼</span>
+    </div>
+    <div class="add-body" id="addBody">
+      <form id="addForm" autocomplete="off">
+        <div class="form-grid">
+          <div class="fg">
+            <label for="f-name">שם המוצר *</label>
+            <input id="f-name" type="text" required placeholder="לדוגמה: חלב 3%" />
+          </div>
+          <div class="fg">
+            <label for="f-cat">קטגוריה *</label>
+            <select id="f-cat" required>
+              <option value="">בחר קטגוריה</option>
+              <option>מקרר</option><option>מזווה</option><option>מקפיא</option>
+              <option>ניקיון</option><option>היגיינה</option><option>ילדים</option>
+              <option>חיות מחמד</option><option>אחר</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label for="f-loc">מיקום *</label>
+            <select id="f-loc" required>
+              <option value="">בחר מיקום</option>
+              <option>מטבח</option><option>מחסן</option><option>אמבטיה</option>
+              <option>מרפסת שירות</option><option>חדר ילדים</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label for="f-qty">כמות נוכחית *</label>
+            <input id="f-qty" type="number" min="0" step="0.5" required placeholder="0" />
+          </div>
+          <div class="fg">
+            <label for="f-unit">יחידת מידה *</label>
+            <select id="f-unit" required>
+              <option value="">בחר יחידה</option>
+              <option>יח'</option><option>ק"ג</option><option>ליטר</option>
+              <option>אריזה</option><option>גביע</option><option>שקית</option>
+              <option>פחית</option><option>בקבוק</option><option>קופסה</option>
+              <option>גליל</option><option>כיכר</option><option>שפופרת</option>
+              <option>צנצנת</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label for="f-min">סף מלאי נמוך *</label>
+            <input id="f-min" type="number" min="0.5" step="0.5" required placeholder="לדוגמה: 2" />
+          </div>
+          <div class="fg">
+            <label for="f-normal">כמות מלאי תקין *</label>
+            <input id="f-normal" type="number" min="1" step="0.5" required placeholder="לדוגמה: 6" />
+          </div>
+          <div class="fg">
+            <label for="f-days">ימים לכל יחידה</label>
+            <input id="f-days" type="number" min="0.5" step="0.5" placeholder="לדוגמה: 3" />
+          </div>
+          <div class="fg">
+            <label for="f-store">חנות</label>
+            <select id="f-store">
+              <option value="">—</option>
+              <option>סופר</option><option>שוק</option><option>פארם</option>
+              <option>אונליין</option><option>מאפייה</option><option>אחר</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label for="f-price">מחיר ליחידה (₪)</label>
+            <input id="f-price" type="number" min="0" step="0.1" placeholder="0" />
+          </div>
+          <div class="fg">
+            <label for="f-expiry">תאריך תפוגה</label>
+            <input id="f-expiry" type="date" />
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn">הוסף מוצר</button>
+          <button type="button" class="btn ghost" id="clearFormBtn">נקה</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <div class="grid">
     <section class="card" aria-labelledby="invTitle">
       <h2 id="invTitle">מלאי <span class="count" id="invCount"></span></h2>
@@ -158,6 +297,8 @@
           <option value="ok">תקין</option>
         </select>
       </div>
+
+      <!-- Desktop table -->
       <div class="table-wrap">
         <table>
           <thead>
@@ -166,12 +307,16 @@
               <th>כמות</th>
               <th>סטטוס</th>
               <th class="hide-sm">צפי סיום</th>
-              <th class="hide-sm">תוקף</th>
+              <th>תוקף</th>
+              <th></th>
             </tr>
           </thead>
           <tbody id="invBody"></tbody>
         </table>
       </div>
+
+      <!-- Mobile card view -->
+      <div class="mobile-cards" id="mobileCards"></div>
     </section>
 
     <section class="card" aria-labelledby="shopTitle">
@@ -207,43 +352,44 @@
 
 <script>
 /* =========================================================
-   MOCK DATA – נתוני דמה
-   תאריכים נשמרים כהפרש ימים מהיום, כדי שהדמו תמיד ייראה עדכני.
+   MOCK DATA
+   expiresInDays: days from today (null = no expiry relevant)
+   normalQty: target/full quantity (shopping uses this as the replenishment target)
    ========================================================= */
 const MOCK_DATA = {
   items: [
-    { id: 1,  name: "חלב 3%",            category: "מקרר",          location: "מטבח",   qty: 1, unit: "ליטר",  minQty: 2, daysPerUnit: 2,  store: "סופר",    price: 6.9,  expiresInDays: 4 },
-    { id: 2,  name: "ביצים L",            category: "מקרר",          location: "מטבח",   qty: 6, unit: "יח'",   minQty: 12, daysPerUnit: 0.5, store: "סופר",  price: 1.2,  expiresInDays: 12 },
-    { id: 3,  name: "גבינה לבנה 5%",      category: "מקרר",          location: "מטבח",   qty: 0, unit: "גביע",  minQty: 2, daysPerUnit: 3,  store: "סופר",    price: 5.5,  expiresInDays: null },
-    { id: 4,  name: "יוגורט",             category: "מקרר",          location: "מטבח",   qty: 4, unit: "גביע",  minQty: 4, daysPerUnit: 1,  store: "סופר",    price: 3.9,  expiresInDays: 2 },
-    { id: 5,  name: "חמאה",               category: "מקרר",          location: "מטבח",   qty: 1, unit: "אריזה", minQty: 1, daysPerUnit: 14, store: "סופר",    price: 9.9,  expiresInDays: 30 },
-    { id: 6,  name: "עגבניות",            category: "מקרר",          location: "מטבח",   qty: 0.5, unit: "ק\"ג", minQty: 1, daysPerUnit: 3, store: "שוק",     price: 7.9,  expiresInDays: 3 },
-    { id: 7,  name: "מלפפונים",           category: "מקרר",          location: "מטבח",   qty: 1.5, unit: "ק\"ג", minQty: 1, daysPerUnit: 3, store: "שוק",     price: 5.9,  expiresInDays: 5 },
-    { id: 8,  name: "חומוס מוכן",         category: "מקרר",          location: "מטבח",   qty: 1, unit: "גביע",  minQty: 1, daysPerUnit: 3,  store: "סופר",    price: 8.9,  expiresInDays: -1 },
-    { id: 9,  name: "פסטה",               category: "מזווה",         location: "מטבח",   qty: 5, unit: "אריזה", minQty: 3, daysPerUnit: 4,  store: "סופר",    price: 5.9,  expiresInDays: 240 },
-    { id: 10, name: "אורז בסמטי",          category: "מזווה",         location: "מטבח",   qty: 1, unit: "ק\"ג",  minQty: 2, daysPerUnit: 7,  store: "סופר",    price: 12.9, expiresInDays: 300 },
-    { id: 11, name: "שמן זית",            category: "מזווה",         location: "מטבח",   qty: 1, unit: "בקבוק", minQty: 1, daysPerUnit: 30, store: "סופר",    price: 39.9, expiresInDays: 400 },
-    { id: 12, name: "רסק עגבניות",         category: "מזווה",         location: "מחסן",   qty: 6, unit: "פחית",  minQty: 3, daysPerUnit: 7,  store: "סופר",    price: 3.5,  expiresInDays: 500 },
-    { id: 13, name: "טונה",               category: "מזווה",         location: "מחסן",   qty: 2, unit: "פחית",  minQty: 4, daysPerUnit: 4,  store: "סופר",    price: 6.5,  expiresInDays: 600 },
-    { id: 14, name: "קפה נמס",            category: "מזווה",         location: "מטבח",   qty: 1, unit: "צנצנת", minQty: 1, daysPerUnit: 20, store: "סופר",    price: 29.9, expiresInDays: 180 },
-    { id: 15, name: "קורנפלקס",           category: "מזווה",         location: "מטבח",   qty: 0, unit: "אריזה", minQty: 2, daysPerUnit: 5,  store: "סופר",    price: 17.9, expiresInDays: null },
-    { id: 16, name: "לחם מלא",            category: "מזווה",         location: "מטבח",   qty: 1, unit: "כיכר",  minQty: 1, daysPerUnit: 2,  store: "מאפייה",  price: 14,   expiresInDays: 1 },
-    { id: 17, name: "חזה עוף",            category: "מקפיא",         location: "מטבח",   qty: 2, unit: "ק\"ג",  minQty: 1, daysPerUnit: 4,  store: "סופר",    price: 39.9, expiresInDays: 60 },
-    { id: 18, name: "אפונה קפואה",         category: "מקפיא",         location: "מטבח",   qty: 3, unit: "שקית",  minQty: 2, daysPerUnit: 10, store: "סופר",    price: 9.9,  expiresInDays: 200 },
-    { id: 19, name: "שניצל תירס",          category: "מקפיא",         location: "מטבח",   qty: 0, unit: "אריזה", minQty: 1, daysPerUnit: 6,  store: "סופר",    price: 24.9, expiresInDays: null },
-    { id: 20, name: "נוזל כלים",           category: "ניקיון",        location: "מטבח",   qty: 1, unit: "בקבוק", minQty: 1, daysPerUnit: 20, store: "סופר",    price: 11.9, expiresInDays: null },
-    { id: 21, name: "אבקת כביסה",          category: "ניקיון",        location: "מרפסת שירות", qty: 0, unit: "אריזה", minQty: 1, daysPerUnit: 30, store: "אונליין", price: 49.9, expiresInDays: null },
-    { id: 22, name: "טבליות למדיח",        category: "ניקיון",        location: "מטבח",   qty: 12, unit: "יח'",  minQty: 10, daysPerUnit: 1, store: "אונליין", price: 1.1,  expiresInDays: null },
-    { id: 23, name: "שקיות זבל",           category: "ניקיון",        location: "מחסן",   qty: 1, unit: "גליל",  minQty: 2, daysPerUnit: 14, store: "סופר",    price: 12.9, expiresInDays: null },
-    { id: 24, name: "נייר טואלט",          category: "היגיינה",       location: "מחסן",   qty: 8, unit: "גליל",  minQty: 12, daysPerUnit: 2, store: "סופר",    price: 2.5,  expiresInDays: null },
-    { id: 25, name: "משחת שיניים",         category: "היגיינה",       location: "אמבטיה", qty: 2, unit: "שפופרת", minQty: 2, daysPerUnit: 25, store: "פארם", price: 14.9, expiresInDays: 500 },
-    { id: 26, name: "שמפו",               category: "היגיינה",       location: "אמבטיה", qty: 1, unit: "בקבוק", minQty: 1, daysPerUnit: 30, store: "פארם",    price: 24.9, expiresInDays: null },
-    { id: 27, name: "סבון ידיים",          category: "היגיינה",       location: "אמבטיה", qty: 3, unit: "בקבוק", minQty: 2, daysPerUnit: 20, store: "פארם",    price: 9.9,  expiresInDays: null },
-    { id: 28, name: "דאודורנט",            category: "היגיינה",       location: "אמבטיה", qty: 0, unit: "יח'",   minQty: 1, daysPerUnit: 30, store: "פארם",    price: 19.9, expiresInDays: null },
-    { id: 29, name: "חטיפים לבית הספר",     category: "ילדים",         location: "מטבח",   qty: 4, unit: "יח'",   minQty: 10, daysPerUnit: 0.5, store: "סופר", price: 2.9, expiresInDays: 90 },
-    { id: 30, name: "מגבונים לחים",         category: "ילדים",         location: "אמבטיה", qty: 1, unit: "חבילה", minQty: 2, daysPerUnit: 7,  store: "פארם",    price: 9.9,  expiresInDays: null },
-    { id: 31, name: "פלסטרים",             category: "ילדים",         location: "אמבטיה", qty: 1, unit: "קופסה", minQty: 1, daysPerUnit: 60, store: "פארם",    price: 14.9, expiresInDays: 700 },
-    { id: 32, name: "אוכל לחתול",           category: "חיות מחמד",     location: "מחסן",   qty: 2, unit: "ק\"ג",  minQty: 2, daysPerUnit: 6,  store: "אונליין", price: 22,   expiresInDays: 150 },
+    { id: 1,  name: "חלב 3%",            category: "מקרר",          location: "מטבח",          qty: 1,   unit: "ליטר",    minQty: 2,  normalQty: 4,  daysPerUnit: 2,  store: "סופר",    price: 6.9,  expiresInDays: 4 },
+    { id: 2,  name: "ביצים L",            category: "מקרר",          location: "מטבח",          qty: 6,   unit: "יח'",     minQty: 12, normalQty: 24, daysPerUnit: 0.5, store: "סופר",  price: 1.2,  expiresInDays: 12 },
+    { id: 3,  name: "גבינה לבנה 5%",      category: "מקרר",          location: "מטבח",          qty: 0,   unit: "גביע",   minQty: 2,  normalQty: 4,  daysPerUnit: 3,  store: "סופר",    price: 5.5,  expiresInDays: null },
+    { id: 4,  name: "יוגורט",             category: "מקרר",          location: "מטבח",          qty: 4,   unit: "גביע",   minQty: 4,  normalQty: 8,  daysPerUnit: 1,  store: "סופר",    price: 3.9,  expiresInDays: 2 },
+    { id: 5,  name: "חמאה",               category: "מקרר",          location: "מטבח",          qty: 1,   unit: "אריזה",  minQty: 1,  normalQty: 2,  daysPerUnit: 14, store: "סופר",    price: 9.9,  expiresInDays: 30 },
+    { id: 6,  name: "עגבניות",            category: "מקרר",          location: "מטבח",          qty: 0.5, unit: "ק\"ג",  minQty: 1,  normalQty: 2,  daysPerUnit: 3,  store: "שוק",     price: 7.9,  expiresInDays: 3 },
+    { id: 7,  name: "מלפפונים",           category: "מקרר",          location: "מטבח",          qty: 1.5, unit: "ק\"ג",  minQty: 1,  normalQty: 2,  daysPerUnit: 3,  store: "שוק",     price: 5.9,  expiresInDays: 5 },
+    { id: 8,  name: "חומוס מוכן",         category: "מקרר",          location: "מטבח",          qty: 1,   unit: "גביע",   minQty: 1,  normalQty: 3,  daysPerUnit: 3,  store: "סופר",    price: 8.9,  expiresInDays: -1 },
+    { id: 9,  name: "פסטה",               category: "מזווה",         location: "מטבח",          qty: 5,   unit: "אריזה",  minQty: 3,  normalQty: 6,  daysPerUnit: 4,  store: "סופר",    price: 5.9,  expiresInDays: 240 },
+    { id: 10, name: "אורז בסמטי",          category: "מזווה",         location: "מטבח",          qty: 1,   unit: "ק\"ג",  minQty: 2,  normalQty: 4,  daysPerUnit: 7,  store: "סופר",    price: 12.9, expiresInDays: 300 },
+    { id: 11, name: "שמן זית",            category: "מזווה",         location: "מטבח",          qty: 1,   unit: "בקבוק",  minQty: 1,  normalQty: 2,  daysPerUnit: 30, store: "סופר",    price: 39.9, expiresInDays: 400 },
+    { id: 12, name: "רסק עגבניות",         category: "מזווה",         location: "מחסן",          qty: 6,   unit: "פחית",   minQty: 3,  normalQty: 6,  daysPerUnit: 7,  store: "סופר",    price: 3.5,  expiresInDays: 500 },
+    { id: 13, name: "טונה",               category: "מזווה",         location: "מחסן",          qty: 2,   unit: "פחית",   minQty: 4,  normalQty: 8,  daysPerUnit: 4,  store: "סופר",    price: 6.5,  expiresInDays: 600 },
+    { id: 14, name: "קפה נמס",            category: "מזווה",         location: "מטבח",          qty: 1,   unit: "צנצנת",  minQty: 1,  normalQty: 2,  daysPerUnit: 20, store: "סופר",    price: 29.9, expiresInDays: 180 },
+    { id: 15, name: "קורנפלקס",           category: "מזווה",         location: "מטבח",          qty: 0,   unit: "אריזה",  minQty: 2,  normalQty: 4,  daysPerUnit: 5,  store: "סופר",    price: 17.9, expiresInDays: null },
+    { id: 16, name: "לחם מלא",            category: "מזווה",         location: "מטבח",          qty: 1,   unit: "כיכר",   minQty: 1,  normalQty: 2,  daysPerUnit: 2,  store: "מאפייה",  price: 14,   expiresInDays: 1 },
+    { id: 17, name: "חזה עוף",            category: "מקפיא",         location: "מטבח",          qty: 2,   unit: "ק\"ג",  minQty: 1,  normalQty: 3,  daysPerUnit: 4,  store: "סופר",    price: 39.9, expiresInDays: 60 },
+    { id: 18, name: "אפונה קפואה",         category: "מקפיא",         location: "מטבח",          qty: 3,   unit: "שקית",   minQty: 2,  normalQty: 4,  daysPerUnit: 10, store: "סופר",    price: 9.9,  expiresInDays: 200 },
+    { id: 19, name: "שניצל תירס",          category: "מקפיא",         location: "מטבח",          qty: 0,   unit: "אריזה",  minQty: 1,  normalQty: 2,  daysPerUnit: 6,  store: "סופר",    price: 24.9, expiresInDays: null },
+    { id: 20, name: "נוזל כלים",           category: "ניקיון",        location: "מטבח",          qty: 1,   unit: "בקבוק",  minQty: 1,  normalQty: 2,  daysPerUnit: 20, store: "סופר",    price: 11.9, expiresInDays: null },
+    { id: 21, name: "אבקת כביסה",          category: "ניקיון",        location: "מרפסת שירות",   qty: 0,   unit: "אריזה",  minQty: 1,  normalQty: 2,  daysPerUnit: 30, store: "אונליין", price: 49.9, expiresInDays: null },
+    { id: 22, name: "טבליות למדיח",        category: "ניקיון",        location: "מטבח",          qty: 12,  unit: "יח'",    minQty: 10, normalQty: 20, daysPerUnit: 1,  store: "אונליין", price: 1.1,  expiresInDays: null },
+    { id: 23, name: "שקיות זבל",           category: "ניקיון",        location: "מחסן",          qty: 1,   unit: "גליל",   minQty: 2,  normalQty: 4,  daysPerUnit: 14, store: "סופר",    price: 12.9, expiresInDays: null },
+    { id: 24, name: "נייר טואלט",          category: "היגיינה",       location: "מחסן",          qty: 8,   unit: "גליל",   minQty: 12, normalQty: 24, daysPerUnit: 2,  store: "סופר",    price: 2.5,  expiresInDays: null },
+    { id: 25, name: "משחת שיניים",         category: "היגיינה",       location: "אמבטיה",        qty: 2,   unit: "שפופרת", minQty: 2,  normalQty: 4,  daysPerUnit: 25, store: "פארם",    price: 14.9, expiresInDays: 500 },
+    { id: 26, name: "שמפו",               category: "היגיינה",       location: "אמבטיה",        qty: 1,   unit: "בקבוק",  minQty: 1,  normalQty: 2,  daysPerUnit: 30, store: "פארם",    price: 24.9, expiresInDays: null },
+    { id: 27, name: "סבון ידיים",          category: "היגיינה",       location: "אמבטיה",        qty: 3,   unit: "בקבוק",  minQty: 2,  normalQty: 4,  daysPerUnit: 20, store: "פארם",    price: 9.9,  expiresInDays: null },
+    { id: 28, name: "דאודורנט",            category: "היגיינה",       location: "אמבטיה",        qty: 0,   unit: "יח'",    minQty: 1,  normalQty: 2,  daysPerUnit: 30, store: "פארם",    price: 19.9, expiresInDays: null },
+    { id: 29, name: "חטיפים לבית הספר",    category: "ילדים",         location: "מטבח",          qty: 4,   unit: "יח'",    minQty: 10, normalQty: 20, daysPerUnit: 0.5, store: "סופר",  price: 2.9,  expiresInDays: 90 },
+    { id: 30, name: "מגבונים לחים",        category: "ילדים",         location: "אמבטיה",        qty: 1,   unit: "חבילה",  minQty: 2,  normalQty: 4,  daysPerUnit: 7,  store: "פארם",    price: 9.9,  expiresInDays: null },
+    { id: 31, name: "פלסטרים",             category: "ילדים",         location: "אמבטיה",        qty: 1,   unit: "קופסה",  minQty: 1,  normalQty: 2,  daysPerUnit: 60, store: "פארם",    price: 14.9, expiresInDays: 700 },
+    { id: 32, name: "אוכל לחתול",          category: "חיות מחמד",     location: "מחסן",          qty: 2,   unit: "ק\"ג",  minQty: 2,  normalQty: 4,  daysPerUnit: 6,  store: "אונליין", price: 22,   expiresInDays: 150 },
   ],
   orders: [
     { id: "SH-2041", store: "אונליין", orderedDaysAgo: 2, etaInDays: 1, status: "בדרך",  lines: [{ itemId: 21, qty: 2 }, { itemId: 32, qty: 4 }] },
@@ -259,6 +405,7 @@ const ORDER_STEPS = ["הוזמן", "נשלח", "בדרך", "נמסר"];
 const state = {
   items: structuredClone(MOCK_DATA.items),
   orders: structuredClone(MOCK_DATA.orders),
+  nextId: MOCK_DATA.items.reduce((m, i) => Math.max(m, i.id), 0) + 1,
   nextOrderNo: 2042,
 };
 const $ = (id) => document.getElementById(id);
@@ -278,10 +425,9 @@ const STATUS_INFO = {
   ok:  { label: "תקין", cls: "b-ok" },
 };
 function stepFor(item) {
-  // צעד +/- : חצי יחידה לפריטים שנמדדים בק"ג, אחרת יחידה שלמה
   return item.unit === 'ק"ג' ? 0.5 : 1;
 }
-function daysLeft(item) { return item.qty * item.daysPerUnit; }
+function daysLeft(item) { return item.qty * (item.daysPerUnit || 1); }
 
 function openOrderQty(itemId) {
   return state.orders
@@ -296,9 +442,25 @@ function shoppingList() {
     .filter((i) => status(i) !== "ok" && openOrderQty(i.id) === 0)
     .map((i) => {
       const step = stepFor(i);
-      const need = Math.max(step, Math.ceil((i.minQty * 2 - i.qty) / step) * step);
-      return { item: i, qty: need, cost: need * i.price };
+      const target = i.normalQty || i.minQty * 2;
+      const need = Math.max(step, Math.ceil((target - i.qty) / step) * step);
+      return { item: i, qty: need, cost: need * (i.price || 0) };
     });
+}
+
+/* Expiry helpers: convert between absolute date string (YYYY-MM-DD) and days from today */
+function expiryToDate(expiresInDays) {
+  if (expiresInDays === null || expiresInDays === undefined) return "";
+  const d = new Date();
+  d.setDate(d.getDate() + expiresInDays);
+  return d.toISOString().split("T")[0];
+}
+function dateToExpiry(dateStr) {
+  if (!dateStr) return null;
+  const d = new Date(dateStr);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return Math.round((d - today) / 86400000);
 }
 
 function expiryBadge(days) {
@@ -338,29 +500,37 @@ function renderKpis() {
 }
 
 function renderFilters() {
-  const cats = [...new Set(state.items.map((i) => i.category))];
+  const cats = [...new Set(state.items.map((i) => i.category))].sort();
+  const cur = $("catFilter").value;
   $("catFilter").innerHTML = '<option value="">כל הקטגוריות</option>' +
-    cats.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+    cats.map((c) => `<option value="${esc(c)}" ${c === cur ? "selected" : ""}>${esc(c)}</option>`).join("");
 }
 
-function renderInventory() {
+function getFilteredItems() {
   const q = $("search").value.trim();
   const cat = $("catFilter").value;
   const st = $("statusFilter").value;
   const order = { out: 0, low: 1, ok: 2 };
-  const rows = state.items
+  return state.items
     .filter((i) => (!q || i.name.includes(q)) && (!cat || i.category === cat) && (!st || status(i) === st))
     .sort((a, b) => order[status(a)] - order[status(b)] || a.name.localeCompare(b.name, "he"));
+}
 
+function renderInventory() {
+  const rows = getFilteredItems();
   $("invCount").textContent = rows.length;
   if (!rows.length) {
-    $("invBody").innerHTML = '<tr><td colspan="5" class="empty">לא נמצאו מוצרים</td></tr>';
+    $("invBody").innerHTML = '<tr><td colspan="6" class="empty">לא נמצאו מוצרים</td></tr>';
+    $("mobileCards").innerHTML = '<div class="empty">לא נמצאו מוצרים</div>';
     return;
   }
+
+  /* Desktop table */
   $("invBody").innerHTML = rows.map((i) => {
     const s = STATUS_INFO[status(i)];
     const d = daysLeft(i);
     const incoming = openOrderQty(i.id);
+    const expVal = expiryToDate(i.expiresInDays);
     return `<tr>
       <td>
         <div class="item-name">${esc(i.name)}</div>
@@ -368,15 +538,58 @@ function renderInventory() {
       </td>
       <td>
         <div class="qty">
-          <button class="icon-btn" data-act="dec" data-id="${i.id}" aria-label="הפחת ${esc(i.name)}">−</button>
+          <button class="icon-btn" data-act="dec" data-id="${i.id}" aria-label="הפחת">−</button>
           <span>${fmtQty(i.qty)} ${esc(i.unit)}</span>
-          <button class="icon-btn" data-act="inc" data-id="${i.id}" aria-label="הוסף ${esc(i.name)}">+</button>
+          <button class="icon-btn" data-act="inc" data-id="${i.id}" aria-label="הוסף">+</button>
         </div>
       </td>
       <td><span class="badge ${s.cls}">${s.label}</span></td>
       <td class="hide-sm">${i.qty <= 0 ? '<span class="item-meta">—</span>' : `<span class="item-meta">~${Math.round(d)} ימים</span>`}</td>
-      <td class="hide-sm">${expiryBadge(i.expiresInDays)}</td>
+      <td>
+        <input type="date" class="exp-date-input" value="${expVal}"
+          data-act="expiry" data-id="${i.id}" aria-label="תאריך תפוגה ${esc(i.name)}" />
+      </td>
+      <td>
+        <button class="icon-btn del" data-act="del" data-id="${i.id}" aria-label="מחק ${esc(i.name)}">✕</button>
+      </td>
     </tr>`;
+  }).join("");
+
+  /* Mobile cards */
+  $("mobileCards").innerHTML = rows.map((i) => {
+    const s = STATUS_INFO[status(i)];
+    const incoming = openOrderQty(i.id);
+    const expVal = expiryToDate(i.expiresInDays);
+    return `<div class="m-card">
+      <div class="m-card-head">
+        <div>
+          <div class="m-card-name">${esc(i.name)}</div>
+          <div class="item-meta">${esc(i.category)} · ${esc(i.location)}</div>
+        </div>
+        <span class="badge ${s.cls}">${s.label}</span>
+      </div>
+      <div class="m-card-row">
+        <span class="m-card-label">כמות</span>
+        <div class="qty">
+          <button class="icon-btn" data-act="dec" data-id="${i.id}" aria-label="הפחת">−</button>
+          <span>${fmtQty(i.qty)} ${esc(i.unit)}</span>
+          <button class="icon-btn" data-act="inc" data-id="${i.id}" aria-label="הוסף">+</button>
+        </div>
+      </div>
+      <div class="m-card-row">
+        <span class="m-card-label">סף נמוך / תקין</span>
+        <span class="item-meta">${fmtQty(i.minQty)} / ${fmtQty(i.normalQty || i.minQty * 2)} ${esc(i.unit)}</span>
+      </div>
+      ${incoming ? `<div class="m-card-row"><span class="m-card-label">בדרך</span><span style="color:var(--info)">+${fmtQty(incoming)} ${esc(i.unit)}</span></div>` : ""}
+      <div class="m-card-row">
+        <span class="m-card-label">תאריך תפוגה</span>
+        <input type="date" class="exp-date-input" value="${expVal}"
+          data-act="expiry" data-id="${i.id}" aria-label="תאריך תפוגה" />
+      </div>
+      <div class="m-card-actions">
+        <button class="btn danger" data-act="del" data-id="${i.id}">מחק</button>
+      </div>
+    </div>`;
   }).join("");
 }
 
@@ -388,7 +601,7 @@ function renderShopping() {
     return;
   }
   const byStore = {};
-  list.forEach((l) => (byStore[l.item.store] ||= []).push(l));
+  list.forEach((l) => (byStore[l.item.store || "אחר"] ||= []).push(l));
   $("shopList").innerHTML = Object.entries(byStore)
     .sort((a, b) => b[1].length - a[1].length)
     .map(([store, lines]) => {
@@ -429,10 +642,7 @@ function renderOrders() {
     const stepIdx = ORDER_STEPS.indexOf(o.status);
     const done = o.status === "נמסר";
     const eta = done ? "התקבל" : o.etaInDays <= 0 ? "מגיע היום" : o.etaInDays === 1 ? "מגיע מחר" : `מגיע בעוד ${o.etaInDays} ימים`;
-    const lines = o.lines.map((l) => {
-      const it = itemById(l.itemId);
-      return it ? `${esc(it.name)} × ${fmtQty(l.qty)}` : "";
-    }).join(" · ");
+    const lines = o.lines.map((l) => { const it = itemById(l.itemId); return it ? `${esc(it.name)} × ${fmtQty(l.qty)}` : ""; }).join(" · ");
     return `<div class="order" style="${done ? "opacity:.65" : ""}">
       <div class="order-head">
         <strong>${esc(o.store)}</strong>
@@ -464,7 +674,6 @@ function renderCharts() {
       <div class="bar-track"><div class="bar-fill" style="width:${(n / max) * 100}%"></div></div>
       <span class="bar-num">${n}</span>
     </div>`).join("");
-
   const total = state.items.length;
   const parts = [
     { key: "ok",  label: "תקין", color: "var(--ok)" },
@@ -479,6 +688,7 @@ function renderCharts() {
 
 function renderAll() {
   renderKpis();
+  renderFilters();
   renderInventory();
   renderShopping();
   renderExpiring();
@@ -496,12 +706,28 @@ function changeQty(id, dir) {
   renderAll();
 }
 
+function setExpiry(id, dateStr) {
+  const it = itemById(id);
+  if (!it) return;
+  it.expiresInDays = dateToExpiry(dateStr);
+  renderAll();
+  toast("תאריך התפוגה עודכן");
+}
+
+function deleteItem(id) {
+  const it = itemById(id);
+  if (!it) return;
+  if (!confirm(`למחוק את "${it.name}"?`)) return;
+  state.items = state.items.filter((i) => i.id !== id);
+  renderAll();
+  toast(`"${it.name}" נמחק`);
+}
+
 function placeOrder(store) {
   const lines = shoppingList().filter((l) => l.item.store === store);
   if (!lines.length) return;
   state.orders.push({
-    id: "SH-" + state.nextOrderNo++,
-    store,
+    id: "SH-" + state.nextOrderNo++, store,
     orderedDaysAgo: 0,
     etaInDays: store === "אונליין" ? 3 : 1,
     status: "הוזמן",
@@ -522,27 +748,69 @@ function advanceOrder(id) {
 function receiveOrder(id) {
   const o = state.orders.find((x) => x.id === id);
   if (!o || o.status === "נמסר") return;
-  o.status = "נמסר";
-  o.etaInDays = 0;
-  o.lines.forEach((l) => {
-    const it = itemById(l.itemId);
-    if (it) it.qty = +(it.qty + l.qty).toFixed(2);
-  });
+  o.status = "נמסר"; o.etaInDays = 0;
+  o.lines.forEach((l) => { const it = itemById(l.itemId); if (it) it.qty = +(it.qty + l.qty).toFixed(2); });
   toast(`ההזמנה #${o.id} התקבלה והמלאי עודכן`);
   renderAll();
 }
 
+function addItem(e) {
+  e.preventDefault();
+  const name     = $("f-name").value.trim();
+  const category = $("f-cat").value;
+  const location = $("f-loc").value;
+  const qty      = parseFloat($("f-qty").value) || 0;
+  const unit     = $("f-unit").value;
+  const minQty   = parseFloat($("f-min").value);
+  const normalQty = parseFloat($("f-normal").value);
+  const daysPerUnit = parseFloat($("f-days").value) || 1;
+  const store    = $("f-store").value || "סופר";
+  const price    = parseFloat($("f-price").value) || 0;
+  const expiresInDays = dateToExpiry($("f-expiry").value);
+
+  if (minQty >= normalQty) {
+    toast("⚠️ סף מלאי נמוך חייב להיות קטן מכמות מלאי תקין");
+    return;
+  }
+
+  state.items.push({ id: state.nextId++, name, category, location, qty, unit, minQty, normalQty, daysPerUnit, store, price, expiresInDays });
+  e.target.reset();
+  renderAll();
+  toast(`"${name}" נוסף למלאי ✓`);
+}
+
+/* =========================================================
+   EVENT LISTENERS
+   ========================================================= */
 document.addEventListener("click", (e) => {
-  const b = e.target.closest("button[data-act]");
+  const b = e.target.closest("[data-act]");
   if (!b) return;
   const act = b.dataset.act;
-  if (act === "inc") changeQty(+b.dataset.id, 1);
+  if (act === "inc")     changeQty(+b.dataset.id, 1);
   else if (act === "dec") changeQty(+b.dataset.id, -1);
-  else if (act === "order") placeOrder(b.dataset.store);
+  else if (act === "del") deleteItem(+b.dataset.id);
+  else if (act === "order")   placeOrder(b.dataset.store);
   else if (act === "advance") advanceOrder(b.dataset.id);
   else if (act === "receive") receiveOrder(b.dataset.id);
 });
-["search", "catFilter", "statusFilter"].forEach((id) => $(id).addEventListener("input", renderInventory));
+
+document.addEventListener("change", (e) => {
+  const el = e.target.closest("[data-act='expiry']");
+  if (el) setExpiry(+el.dataset.id, el.value);
+});
+
+["search", "catFilter", "statusFilter"].forEach((id) => $(id).addEventListener("input", () => { renderFilters(); renderInventory(); }));
+
+$("addPanelHead").addEventListener("click", () => {
+  const body = $("addBody");
+  const toggle = $("addToggle");
+  const open = body.classList.toggle("open");
+  toggle.classList.toggle("open", open);
+  $("addPanelHead").setAttribute("aria-expanded", open);
+});
+
+$("addForm").addEventListener("submit", addItem);
+$("clearFormBtn").addEventListener("click", () => $("addForm").reset());
 
 $("themeToggle").addEventListener("click", () => {
   const root = document.documentElement;
@@ -551,7 +819,6 @@ $("themeToggle").addEventListener("click", () => {
 });
 
 $("today").textContent = new Date().toLocaleDateString("he-IL", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-renderFilters();
 renderAll();
 </script>
 </body>
