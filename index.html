@@ -609,7 +609,11 @@ function renderShopping() {
       return `<div class="store-group">
         <div class="store-head">
           <strong>${esc(store)}</strong>
-          <button class="btn" data-act="order" data-store="${esc(store)}">הזמן</button>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="btn ghost" data-act="copy-list" data-store="${esc(store)}" title="העתק שמות מוצרים">📋 העתק</button>
+            <button class="btn" data-act="order" data-store="${esc(store)}"
+              ${(store === "סופר" || store === "אונליין") ? 'data-url="https://www.rami-levy.co.il/he"' : ""}>הזמן</button>
+          </div>
         </div>
         ${lines.map((l) => `<div class="line">
           <span>${esc(l.item.name)} <span class="muted">× ${fmtQty(l.qty)} ${esc(l.item.unit)}</span></span>
@@ -618,6 +622,7 @@ function renderShopping() {
         <div class="store-total"><span>סה"כ</span><span>${fmtMoney(total)}</span></div>
       </div>`;
     }).join("");
+
 }
 
 function renderExpiring() {
@@ -789,7 +794,19 @@ document.addEventListener("click", (e) => {
   if (act === "inc")     changeQty(+b.dataset.id, 1);
   else if (act === "dec") changeQty(+b.dataset.id, -1);
   else if (act === "del") deleteItem(+b.dataset.id);
-  else if (act === "order")   placeOrder(b.dataset.store);
+  else if (act === "order") {
+    placeOrder(b.dataset.store);
+    if (b.dataset.url) window.open(b.dataset.url, "_blank", "noopener");
+  }
+  else if (act === "copy-list") {
+    const names = shoppingList()
+      .filter((l) => l.item.store === b.dataset.store)
+      .map((l) => l.item.name)
+      .join("\n");
+    navigator.clipboard.writeText(names)
+      .then(() => toast("📋 הרשימה הועתקה — ניתן להדביק באתר רמי לוי"))
+      .catch(() => toast("לא ניתן להעתיק אוטומטית — נסי Ctrl+C ידנית"));
+  }
   else if (act === "advance") advanceOrder(b.dataset.id);
   else if (act === "receive") receiveOrder(b.dataset.id);
 });
